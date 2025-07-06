@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Office | Современный виртуальный офис</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6C5CE7;
+            --secondary: #00B894;
+            --accent: #FD79A8;
+            --background: #F9F9FF;
+            --text: #2D3436;
+            --card-bg: #FFFFFF;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--text);
+            opacity: 0.8;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .rooms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .room-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .room-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .image-container {
+            width: 100%;
+            height: 180px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f5f5f5;
+        }
+
+        .room-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+        }
+
+        .room-card:hover .room-image {
+            transform: scale(1.05);
+        }
+
+        .room-content {
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .room-title {
+            font-size: 1.3rem;
+            margin: 0 0 10px;
+            color: var(--primary);
+        }
+
+        .room-description {
+            color: var(--text);
+            opacity: 0.7;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+            flex: 1;
+        }
+
+        .room-button {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            text-align: center;
+            margin-top: auto;
+        }
+
+        .room-button:hover {
+            background-color: #5649C0;
+        }
+
+        .room-button.chat {
+            background-color: var(--accent);
+        }
+
+        .room-button.chat:hover {
+            background-color: #FC62A0;
+        }
+
+        /* Стили чата */
+        #chat-container {
+            display: none;
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 350px;
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            z-index: 1000;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            padding: 15px 20px;
+            background-color: var(--primary);
+            color: white;
+            font-weight: 500;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .close-chat {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0 5px;
+            line-height: 1;
+        }
+
+        #messages {
+            height: 250px;
+            padding: 15px;
+            overflow-y: auto;
+            background: #F5F5FA;
+        }
+
+        .chat-footer {
+            padding: 15px;
+            border-top: 1px solid #eee;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .message-input-container {
+            display: flex;
+            width: 100%;
+        }
+
+        #messageInput {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            margin-right: 10px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        #sendMessage {
+            padding: 12px 20px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #sendMessage:hover {
+            background-color: #5649C0;
+        }
+
+        #closeChatBtn {
+            padding: 8px;
+            background-color: #f5f5fa;
+            color: var(--text);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color 0.3s ease;
+        }
+
+        #closeChatBtn:hover {
+            background-color: #e0e0e8;
+        }
+
+        @media (max-width: 768px) {
+            .rooms-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            #chat-container {
+                width: calc(100% - 40px);
+                right: 20px;
+                bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Digital Office</h1>
+            <p class="subtitle">Современное пространство для виртуальной работы и общения</p>
+        </header>
+
+        <div class="rooms-grid">
+            <!-- Переговорка -->
+            <div class="room-card">
+                <div class="image-container">
+                    <img src="assets/meeting-room.jpg" alt="Переговорка" class="room-image">
+                </div>
+                <div class="room-content">
+                    <h3 class="room-title">Переговорная</h3>
+                    <p class="room-description">Проводите встречи и обсуждения в уютной виртуальной переговорке</p>
+                    <button class="room-button" onclick="openJitsi('meeting')">Присоединиться</button>
+                </div>
+            </div>
+            
+            <!-- Кухня -->
+            <div class="room-card">
+                <div class="image-container">
+                    <img src="assets/watercooler.jpg" alt="Кухня" class="room-image">
+                </div>
+                <div class="room-content">
+                    <h3 class="room-title">Кулер</h3>
+                    <p class="room-description">Неформальное общение у виртуального кулера с коллегами</p>
+                    <button class="room-button" onclick="openJitsi('watercooler')">Зайти на кухню</button>
+                </div>
+            </div>
+            
+            <!-- Чат -->
+            <div class="room-card">
+                <div class="image-container">
+                    <img src="assets/chat-room.jpg" alt="Общий чат" class="room-image">
+                </div>
+                <div class="room-content">
+                    <h3 class="room-title">Общий чат</h3>
+                    <p class="room-description">Общайтесь в режиме реального времени со всей командой</p>
+                    <button class="room-button chat" onclick="toggleChat()">Открыть чат</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Чат -->
+    <div id="chat-container">
+        <div class="chat-header">
+            <span>Общий чат</span>
+            <button class="close-chat" onclick="toggleChat()">×</button>
+        </div>
+        <div id="messages"></div>
+        <div class="chat-footer">
+            <div class="message-input-container">
+                <input type="text" id="messageInput" placeholder="Напишите сообщение...">
+                <button id="sendMessage" onclick="sendMessage()">Отправить</button>
+            </div>
+            <button id="closeChatBtn" onclick="toggleChat()">Свернуть чат</button>
+        </div>
+    </div>
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="js/firebase.js"></script>
+    
+    <script>
+        // Функции интерфейса
+        function openJitsi(room) {
+            window.open(`https://meet.jit.si/digital-office-${room}`, '_blank');
+        }
+        
+        function toggleChat() {
+            const chat = document.getElementById('chat-container');
+            chat.style.display = chat.style.display === 'block' ? 'none' : 'block';
+            
+            // Прокрутка вниз при открытии чата
+            if (chat.style.display === 'block') {
+                setTimeout(() => {
+                    const messages = document.getElementById('messages');
+                    messages.scrollTop = messages.scrollHeight;
+                }, 100);
+            }
+        }
+        
+        // Инициализация Firebase (должна быть в firebase.js)
+        document.addEventListener('DOMContentLoaded', function() {
+            // Проверяем, что Firebase инициализирован
+            if (typeof firebase !== 'undefined') {
+                console.log('Firebase подключен');
+                
+                // Ваша реализация из firebase.js
+                const firebaseConfig = {
+                    apiKey: "ВАШ_API_KEY",
+                    authDomain: "ВАШ_PROJECT.firebaseapp.com",
+                    databaseURL: "https://ВАШ_PROJECT.firebaseio.com",
+                    projectId: "ВАШ_PROJECT",
+                    storageBucket: "ВАШ_PROJECT.appspot.com",
+                    messagingSenderId: "ВАШ_SENDER_ID",
+                    appId: "ВАШ_APP_ID"
+                };
+                
+                firebase.initializeApp(firebaseConfig);
+                const database = firebase.database();
+                
+                // Отправка сообщения
+                window.sendMessage = function() {
+                    const message = document.getElementById('messageInput').value;
+                    if (message.trim() === '') return;
+                    
+                    database.ref('messages').push().set({
+                        text: message,
+                        timestamp: firebase.database.ServerValue.TIMESTAMP,
+                        sender: "User" // Можно добавить систему авторизации
+                    });
+                    document.getElementById('messageInput').value = '';
+                };
+                
+                // Получение сообщений
+                database.ref('messages').on('child_added', (snapshot) => {
+                    const msg = snapshot.val().text;
+                    const li = document.createElement('div');
+                    li.textContent = msg;
+                    li.style.marginBottom = '10px';
+                    li.style.padding = '8px 12px';
+                    li.style.backgroundColor = '#fff';
+                    li.style.borderRadius = '6px';
+                    li.style.boxShadow = '0 1px 3px rgba(0,0,0,0.1)';
+                    document.getElementById('messages').appendChild(li);
+                    
+                    // Автопрокрутка к новому сообщению
+                    const messages = document.getElementById('messages');
+                    messages.scrollTop = messages.scrollHeight;
+                });
+                
+                // Отправка по Enter
+                document.getElementById('messageInput').addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        sendMessage();
+                    }
+                });
+                
+            } else {
+                console.error('Ошибка: Firebase не загрузился');
+            }
+        });
+    </script>
+</body>
+</html>
